@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import classNames from "classnames";
+import { useParams } from 'react-router-dom';
 
 import './book-page.css';
 import 'swiper/css/scrollbar';
@@ -10,39 +11,44 @@ import commentator from './assets/commentator.png';
 import arrow from './assets/arrow-off.png';
 import { Header } from "../../components/header";
 import { Footer } from "../../components/footer";
-import { FourStars } from '../../components/stars/four-stars';
-import { ThreeStars } from '../../components/stars/three-stars';
 import { Slider } from '../../components/slider';
+import { useGetIdBookQuery } from '../../redux';
+import { Loader } from '../../components/loader';
+import { ErrorMessage } from '../../components/error-message';
+import { Stars } from '../../components/stars';
 
 export function BookPage () {
     const [isArrowOpen, toggleArrow] = useState(false);
+    const { id } = useParams();
+    const {data = [], isError, isLoading} = useGetIdBookQuery(id);
 
     return (
         <section className='book-page'>
+            <Loader />
+            <ErrorMessage />
         <Header />
-        <div className="bookMiniList">Бизнес книги  /  Грокаем алгоритмы. Иллюстрированное пособие для программистов и любопытствующих</div>
-        <div className="main">
+        <div className="bookMiniList">{data?.categories || 'Бизнес книги'}  /  {data?.title}</div>
+        <div className={classNames('main', {loader: isLoading}, {error: isError})}>
             <Slider />
             <div className="mainContent">
-                <div className="header">Грокаем алгоритмы. Иллюстрированное пособие для программистов и любопытствующих</div>
-                <div className="author">Адитья Бхаргава, 2019</div>
+                <div className="header">{data?.title}</div>
+                <div className="author">{data?.authors}, {data?.issueYear}</div>
                 <div className="button"><button type="button">Забронировать</button></div>
                 <div className="aboutBook">О книге</div>
-                <div className="aboutText">
-                Алгоритмы — это всего лишь пошаговые алгоритмы решения задач, и большинство таких задач уже были кем-то решены, протестированы и проверены. Можно, конечно, погрузится в глубокую философию гениального Кнута, изучить многостраничные фолианты с доказательствами и обоснованиями, но хотите ли вы тратить на это свое время?<br /><br />
-                Откройте великолепно иллюстрированную книгу и вы сразу поймете, что алгоритмы — это просто. А грокать алгоритмы — это веселое и увлекательное занятие.
-                </div>
+                <div className="aboutText">{data?.description}</div>
             </div>
         </div>
-        <div className="rating">
+        <div className={classNames('rating', {loader: isLoading}, {error: isError})}>
             <div className="header">Рейтинг</div>
             <hr />
             <div className="starsWithNumbers">
-                <FourStars />
-                <div className="number">4.3</div>
+                {(data?.rating) === null ? <div className='noStars'>ещё нет оценок</div> :
+                     <Stars count={Math.round(data?.rating)} />
+                    }
+                <div className="number">{data?.rating}</div>
             </div>
         </div>
-        <div className="detailedInformation">
+        <div className={classNames('detailedInformation', {loader: isLoading}, {error: isError})}>
             <div className="header">Подробная информация</div>
             <hr />
             <div className="main">
@@ -55,11 +61,11 @@ export function BookPage () {
                         <div className="nameOfProperty">Формат</div>
                     </div>
                     <div className="properties">
-                        <div className="property">Питер</div>
-                        <div className="property">2019</div>
-                        <div className="property">288</div>
-                        <div className="property">Мягкая обложка</div>
-                        <div className="property">70х100</div>
+                        <div className="property">{data?.publish}</div>
+                        <div className="property">{data?.issueYear}</div>
+                        <div className="property">{data?.pages}</div>
+                        <div className="property">{data?.cover}</div>
+                        <div className="property">{data?.format}</div>
                     </div>
                 </div>
                 <div className="column2">
@@ -70,52 +76,53 @@ export function BookPage () {
                         <div className="nameOfProperty">Изготовитель</div>
                     </div>
                     <div className="properties">
-                        <div className="property">Компьютерная литература</div>
-                        <div className="property">370 г</div>
-                        <div className="property">978-5-4461-0923-4</div>
-                        <div className="property">ООО «Питер Мейл». РФ, 198 206, г. Санкт-Петербург, Петергофское ш, д. 73, лит. А29</div>
+                        <div className="property">{data?.categories}</div>
+                        <div className="property">{data?.weight} г</div>
+                        <div className="property">{data?.ISBN}</div>
+                        <div className="property">{data?.producer}</div>
                     </div>
                 </div>
             </div>
         </div>
-        <div className="reviews">
+        <div className={classNames('reviews', {loader: isLoading}, {error: isError})}>
             <div className="headerAndNumber">
                 <div className="header">Отзывы</div>
-                <div className="number">2</div>
+                <div className="number">{data?.comments?.length}</div>
                 <div className="dropdownReviewes">
                     <button type="button" className={classNames('arrowBtn', {dropdown: isArrowOpen})} onClick={() => {toggleArrow(!isArrowOpen)}} data-test-id='button-hide-reviews'><img src={arrow} alt="arrow" /></button>
                 </div>
             </div>
             <hr className={classNames({dropdown: isArrowOpen})} />
-            <div className={classNames('review', {dropdown: isArrowOpen})}>
+            {data?.comments?.map((val) => (
+                <div key={val?.id} className={classNames('review', 'secondReview', {dropdown: isArrowOpen})}>
                 <div className="container">
-                    <div className="commentator"><img src={commentator} alt="commentator" /></div>
-                    <div className="nameOfPerson">Иван Иванов</div>
-                    <div className="date">5 января 2019</div>
+                    <div className="commentator"><img src={(typeof val?.user?.avatarUrl === 'string') ? `https://strapi.cleverland.by${val?.user?.avatarUrl}` : commentator} alt="commentator" /></div>
+                    <div className="nameOfPerson">{val?.user?.firstName} {val?.user?.lastName}</div>
+                    <div className="date">
+                        {val?.createdAt?.slice(8, 10)}
+                        {(val?.createdAt?.slice(5, 7)) === '01' ? ' января ' :
+                        (val?.createdAt?.slice(5, 7)) === '02' ? ' февраля ' :
+                        (val?.createdAt?.slice(5, 7)) === '03' ? ' марта ' :
+                        (val?.createdAt?.slice(5, 7)) === '04' ? ' апреля ' :
+                        (val?.createdAt?.slice(5, 7)) === '05' ? ' мая ' :
+                        (val?.createdAt?.slice(5, 7)) === '06' ? ' июня ' :
+                        (val?.createdAt?.slice(5, 7)) === '07' ? ' июля ' :
+                        (val?.createdAt?.slice(5, 7)) === '08' ? ' августа ' :
+                        (val?.createdAt?.slice(5, 7)) === '09' ? ' сентября ' :
+                        (val?.createdAt?.slice(5, 7)) === '10' ? ' октября ' :
+                        (val?.createdAt?.slice(5, 7)) === '11' ? ' ноября ' :
+                        ' декабря ' 
+                        }
+                        {val?.createdAt?.slice(0, 4)}</div>
                 </div>
-                <FourStars />
+                {(val?.rating) === null ? <div className='noStars'>ещё нет оценок</div> :
+                     <Stars count={Math.round(val?.rating)} />
+                    }
+                <div className="comment">{val?.text}</div>
             </div>
-            <div className={classNames('review', 'secondReview', {dropdown: isArrowOpen})}>
-                <div className="container">
-                    <div className="commentator"><img src={commentator} alt="commentator" /></div>
-                    <div className="nameOfPerson">Николай Качков</div>
-                    <div className="date">20 июня 2018</div>
-                </div>
-                <FourStars />
-                <div className="comment">
-                Учитывая ключевые сценарии поведения, курс на социально-ориентированный национальный проект не оставляет шанса для анализа существующих паттернов поведения. Для современного мира внедрение современных методик предоставляет широкие возможности для позиций, занимаемых участниками в отношении поставленных задач. Как уже неоднократно упомянуто, сделанные на базе интернет-аналитики выводы будут в равной степени предоставлены сами себе. Вот вам яркий пример современных тенденций — глубокий уровень погружения создаёт предпосылки для своевременного выполнения сверхзадачи. И нет сомнений, что акционеры крупнейших компаний, инициированные исключительно синтетически, превращены в посмешище, хотя само их существование приносит несомненную пользу обществу.
-                </div>
-            </div>
-            <div className={classNames('review', {dropdown: isArrowOpen})}>
-                <div className="container">
-                    <div className="commentator"><img src={commentator} alt="commentator" /></div>
-                    <div className="nameOfPerson">Екатерина Беляева</div>
-                    <div className="date">18 февраля 2018</div>
-                </div>
-                <ThreeStars />
-            </div>
+            ))}
         </div>
-        <div className="rateTheBook"><button type="button" data-test-id='button-rating'>оценить книгу</button></div>
+        <div className={classNames('rateTheBook', {loader: isLoading}, {error: isError})}><button type="button" data-test-id='button-rating'>оценить книгу</button></div>
         <Footer />
     </section>
     );

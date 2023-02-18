@@ -1,29 +1,23 @@
 import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Scrollbar, Pagination, Thumbs } from 'swiper';
+import { useParams } from 'react-router-dom';
 
 import 'swiper/css/scrollbar';
 import 'swiper/css/pagination';
 import "swiper/css/thumbs";
 import './slider.css';
 
-import fullImage1 from './assets/fullImage1.png';
-import fullImage2 from './assets/fullImage2.png';
-import MiniImage1 from './assets/image1.png';
-import MiniImage2 from './assets/image2.png';
+import { useGetIdBookQuery } from '../../redux';
+
+import emptyImage from './assets/empty-image.png';
 
 export function Slider () {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
-    const fullImages = [{id:0, image:fullImage1}, {id:1, image:fullImage2},
-                        {id:2, image:fullImage1}, {id:3, image:fullImage2},
-                        {id:4, image:fullImage1}, {id:5, image:fullImage2},
-                        {id:6, image:fullImage1}, {id:7, image:fullImage2}
-    ];
-    const miniImages = [{id:0, image:MiniImage1}, {id:1, image:MiniImage2},
-                        {id:2, image:MiniImage1}, {id:3, image:MiniImage2},
-                        {id:4, image:MiniImage1}, {id:5, image:MiniImage2},
-                        {id:6, image:MiniImage1}, {id:7, image:MiniImage2}
-    ];
+    const { id } = useParams();
+    const {data} = useGetIdBookQuery(id);
+    
+    const check = (data?.images === null) ? true : false;
 
     return (
             <div className="image">
@@ -35,8 +29,8 @@ export function Slider () {
                 thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
                 className='mainSlider mobileSlider'
                 >
-                    {fullImages.map(({image, id}) => (
-                        <SwiperSlide key={id}><img src={image} alt="" /></SwiperSlide>
+                    {check ? <img src={emptyImage} alt="img of book" /> : data?.images?.map((image) => (
+                        <SwiperSlide key={data.id}><img src={`https://strapi.cleverland.by${image?.url}`} alt="img of book" /></SwiperSlide>
                     ))}
                 </Swiper>
                 <Swiper
@@ -48,8 +42,8 @@ export function Slider () {
                     scrollbar={{ draggable: true }}
                     className='miniSlider'
                     >
-                    {miniImages.map(({image, id}) => (
-                        <SwiperSlide data-test-id='slide-mini' key={id}><img src={image} alt="" /></SwiperSlide>
+                    {data?.images?.map((image) => (
+                        <SwiperSlide data-test-id='slide-mini' key={data.id}><img src={image ? `https://strapi.cleverland.by${image?.url}` : emptyImage} alt="img of book" /></SwiperSlide>
                     ))}
                 </Swiper>
             </div>

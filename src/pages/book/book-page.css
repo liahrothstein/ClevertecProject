@@ -12,7 +12,6 @@ div.header div.person div.hiName {
 
 div.bookMiniList {
     background: #F9F9FA;
-    height: 64px;
     padding: 20px 0 20px 11.46vw;
     margin-top: 27px;
     font-weight: 400;
@@ -273,6 +272,23 @@ div.rateTheBook button {
     cursor: pointer;
 }
 
+div.main.loader,
+div.main.error,
+div.rating.loader,
+div.rating.error,
+div.detailedInformation.loader,
+div.detailedInformation.error,
+div.reviews.loader,
+div.reviews.error,
+div.rateTheBook.loader,
+div.rateTheBook.error {
+    display: none;
+}
+
+section.book-page div.errorMessage.bookError {
+    display: flex;
+}
+
 @media (min-width: 769px) and (max-width: 2560px) {
     
 }
@@ -298,7 +314,6 @@ div.rateTheBook button {
         font-weight: 400;
         font-size: 14px;
         line-height: 18px;
-        height: 88px;
     }
     div.main div.image img {
         width: 136px;
@@ -335,6 +350,7 @@ div.rateTheBook button {
     }
     div.rateTheBook button {
         width: 83.33vw;
+        max-width: 100%;
     }
 }
 
@@ -359,7 +375,6 @@ div.rateTheBook button {
         font-weight: 400;
         font-size: 14px;
         line-height: 18px;
-        height: 88px;
     }
     div.main div.image img {
         width: 136px;
@@ -431,7 +446,6 @@ div.rateTheBook button {
         font-weight: 500;
         font-size: 12px;
         line-height: 16px;
-        height: 92px;
     }
     div.main div.mainContent div.header {
         font-weight: 700;
@@ -524,7 +538,6 @@ div.rateTheBook button {
         font-weight: 500;
         font-size: 12px;
         line-height: 16px;
-        height: 92px;
     }
     div.main div.mainContent div.header {
         font-weight: 700;
@@ -592,7 +605,7 @@ div.rateTheBook button {
         margin-top: 32px;
     }
     section.book-page div.bookMiniList {
-        padding-left: 400px;
+        padding-left: 21.2vw;
     }
     section.book-page div.main div.mainContent {
         width: 635px;
@@ -636,8 +649,60 @@ div.rateTheBook button {
     }
 }
 
-@media (min-width: 2506px) {
+
+@media (min-width: 1940px) and (max-width: 2560px) {
+    section.book-page div.bookMiniList {
+        padding-left: 22.2vw;
+    }
+}
+
+@media (min-width: 2000px) and (max-width: 2560px) {
+    section.book-page div.bookMiniList {
+        padding-left: 23.2vw;
+    }
+}
+
+@media (min-width: 2100px) and (max-width: 2560px) {
+    section.book-page div.bookMiniList {
+        padding-left: 24.2vw;
+    }
+}
+
+@media (min-width: 2200px) and (max-width: 2560px) {
+    section.book-page div.bookMiniList {
+        padding-left: 25.2vw;
+    }
+}
+
+@media (min-width: 2200px) and (max-width: 2559px) {
+    section.book-page div.bookMiniList {
+        padding-left: 26.2vw;
+    }
+}
+
+@media (min-width: 2200px) and (max-width: 2560px) {
+    section.book-page div.bookMiniList {
+        padding-left: 27.2vw;
+    }
+}
+
+@media (min-width: 2560px) {
     section.book-page div.bookMiniList {
         padding-left: 28.2vw;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1023px) {
+    div.rating {
+        padding-left: 72px;
+    }
+    div.detailedInformation {
+        padding-left: 72px;
+    }
+    div.reviews {
+        padding-left: 72px;
+    }
+    div.rateTheBook {
+        padding-left: 72px;
     }
 }
