@@ -564,6 +564,9 @@ section.book-page div.errorMessage.bookError {
         gap: 5.74vw;
         padding-left: 5vw;
     }
+    div.rating div.starsWithNumbers div.noStars {
+        padding-left: 5vw;
+    }
     div.rating hr {
         width: 90vw;
         margin: 8px 5vw 11px 5vw;
