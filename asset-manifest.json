@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/ClevertecProject/static/css/main.de5b6223.css",
-    "main.js": "/ClevertecProject/static/js/main.53dd848f.js",
+    "main.css": "/ClevertecProject/static/css/main.2ffa448c.css",
+    "main.js": "/ClevertecProject/static/js/main.2fb08302.js",
     "index.html": "/ClevertecProject/index.html",
-    "main.de5b6223.css.map": "/ClevertecProject/static/css/main.de5b6223.css.map",
-    "main.53dd848f.js.map": "/ClevertecProject/static/js/main.53dd848f.js.map"
+    "main.2ffa448c.css.map": "/ClevertecProject/static/css/main.2ffa448c.css.map",
+    "main.2fb08302.js.map": "/ClevertecProject/static/js/main.2fb08302.js.map"
   },
   "entrypoints": [
-    "static/css/main.de5b6223.css",
-    "static/js/main.53dd848f.js"
+    "static/css/main.2ffa448c.css",
+    "static/js/main.2fb08302.js"
   ]
 }
