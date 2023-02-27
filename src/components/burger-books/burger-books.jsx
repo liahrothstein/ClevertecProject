@@ -21,7 +21,7 @@ export function BurgerBooks(props) {
             </button>
             {categoriesData?.map(book => (
                 <div key={book.id} className="book">
-                    <Link to={`/books/all/${book.path}`}>
+                    <Link to={`/books/${book.path}`}>
                         <button type='button' className={book.path === category ? 'active' : ''} onClick={() => setBurger(!isBurger)}>
                             <div className="nameOfBook" data-test-id={`burger-${book.path}`}>{book?.name}</div>
                         </button>
